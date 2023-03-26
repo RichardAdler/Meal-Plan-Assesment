@@ -1,15 +1,29 @@
 const mongoose = require('mongoose');
 
-const Schema = mongoose.Schema;
-const MealSchema = new Schema({
-    meal: {
-        type: String,
-        required: true,
-    },
-    body: {
-        type: String,
-        required: true,
-    }
+const mealSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  id: {
+    type: Number,
+    required: true,
+    unique: true,
+  },
+  steps: {
+    type: String,
+    required: true,
+  },
+  description: {
+    type: String,
+    required: true,
+  },
+  ingredients: {
+    type: String,
+    required: true,
+  },
 });
 
-module.exports = mongoose.model('Meal', MealSchema);
+const Meal = mongoose.model('Meal', mealSchema);
+
+module.exports = Meal;

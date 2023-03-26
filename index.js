@@ -4,13 +4,12 @@ const express = require ('express');
 const app = express();// Create an instance of the Express application
 const mongoose = require('mongoose');
 const path = require("path");
-const Meal = require('./models/meals');
+const mealsController = require('./controllers/meals');
 
 
 
 app.set("view engine", "ejs");
-app.use(express.static(path.join(__dirname, "public")));
-
+app.use(express.static(__dirname));
 
 
 
@@ -23,7 +22,7 @@ mongoose.set('strictQuery', false);
 // Create a function to connect to MongoDB and handle any errors
 const connectDB = async () => {
     try {
-        const conn = await mongoose.connect(process.env.MONGO_URI); // Connect to MongoDB
+        const conn = await mongoose.connect(process.env.MONGODB_URI); // Connect to MongoDB
         console.log(`MongoDB Connected on: ${conn.connection.host}`); // Log connection host
     } catch (error) {
         console.log(error); // Log any errors
@@ -33,7 +32,7 @@ const connectDB = async () => {
 
 // Define a route for the home page
 app.get('/', (req, res) => {
-    res.send("index"); 
+    res.render("index"); 
 });
 
 // Define a route for adding a new meal
@@ -56,15 +55,7 @@ app.get('/add-meal', async (req, res) => {
 });
 
 // Define a route for retrieving all meals from the database
-app.get('/meals', async (req, res) => {
-    const meal = await Meal.find(); // Retrieve all meals from the database
-
-    if (meal) { // If meals are found
-        res.json(meal) // Send the meals as a JSON response
-    } else {
-        res.send("Something went wrong."); // Send an error message as the response
-    }
-});
+app.get('/meals', mealsController.getAllMeals);
 
 // Connect to MongoDB and start the server
 connectDB().then(() => {

@@ -5,6 +5,8 @@ const app = express();// Create an instance of the Express application
 const mongoose = require('mongoose');
 const path = require("path");
 const mealsController = require('./controllers/meals');
+const Meal = require('./models/meals'); 
+const PORT = process.env.PORT || 3000;
 
 
 
@@ -13,8 +15,8 @@ app.use(express.static(__dirname));
 
 
 
-// Set the port to use
-const PORT = process.env.PORT || 3000;
+
+
 
 // Configure Mongoose to use some specific options
 mongoose.set('strictQuery', false);
@@ -31,35 +33,52 @@ const connectDB = async () => {
 }
 
 // Define a route for the home page
-app.get('/', (req, res) => {
-    res.render("index"); 
-});
-
-// Define a route for adding a new meal
-app.get('/add-meal', async (req, res) => {
+app.get('/', async (req, res) => {
     try {
-        await Meal.insertMany([
-            {   
-                meal: "Chili",
-                body: "recipe for Chili...",
-            },
-            {    
-                meal: "Beef",
-                body: "recipe for Beef...",
-            }
-        ]); // Insert new meals into the database
-        res.send('Meal Added...') // Send a success message as the response
+        const meals = await Meal.aggregate([
+            { $match: { description: { $ne: null } } }, // Exclude meals with a null description
+            { $sample: { size: 4 } } // Retrieve 4 random meals from the remaining documents
+        ]);
+        res.render("index", { meals: meals }); // Pass the meals to the index.ejs file
     } catch (error) {
-        console.log("err", + error); // Log any errors
+        console.log(error); // Log any errors
+        res.status(500).send("Something went wrong.");
     }
 });
 
+
 // Define a route for retrieving all meals from the database
-app.get('/meals', mealsController.getAllMeals);
+app.get('/meals', async (req, res) => {
+    const meal = await Meal.find().limit(10); // Add .limit(10) to limit the results
+
+    if (meal) { // If meals are found
+        res.render('meals', { meals: meal }); // Render the meals.ejs view and pass the meals to it
+    } else {
+        res.send("Something went wrong."); // Send an error message as the response
+    }
+});
+
+app.get('/search', async (req, res) => {
+    const query = req.query.q || '';
+    const limit = 10;
+  
+    try {
+      const meals = await Meal.find({ name: new RegExp(query, 'i') })
+        .limit(limit)
+        .exec();
+  
+      res.render('meals', { meals });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send('Error occurred while searching meals');
+    }
+  });
+
+
 
 // Connect to MongoDB and start the server
 connectDB().then(() => {
-    app.listen(PORT, () => {
+    app.listen(PORT, '0.0.0.0',() => {
         console.log(`Listening on the port: ${PORT}`); // Log the port the server is listening on
     })
 });

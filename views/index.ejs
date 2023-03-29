@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
+    
 <head>
-  <%- include('./partials/head') %>
+ <link rel="stylesheet" href="/css/main.css"/>
   <%- include('./partials/header') %>
 </head>
 <body>
@@ -23,22 +24,15 @@
                 </div>
             </div>
             <div class="featured-meals">
-                <div class="meal-card">
-                    <h4>Arriba Baked Winter Squash</h4>
-                    <p>A delicious Mexican-style baked winter squash recipe that can be prepared either spicy or sweet, depending on your preference.</p>
-                </div>
-                <div class="meal-card">
-                    <h4>A Bit Different Breakfast Pizza</h4>
-                    <p>This breakfast pizza recipe features a unique combination of ingredients, such as sausage, eggs, and cheese, perfect for starting your day.</p>
-                </div>
-                <div class="meal-card">
-                    <h4>Chili</h4>
-                    <p>A classic chili recipe made with ground beef, beans, and a flavorful blend of spices, perfect for warming up on a cold day.</p>
-                </div>
-                <div class="meal-card">
-                    <h4>Beef Stroganoff</h4>
-                    <p>A creamy, savory beef stroganoff recipe made with tender pieces of beef, onions, and mushrooms, served over a bed of noodles.</p>
-                </div>
+                <% meals.forEach((meal) => { %>
+                    <div class="meal-card">                    
+                        <h4><%= meal.name %></h4>
+                        <hr>
+                        <p><%= meal.description %></p>
+                    </div>
+                <% }); %>
+            </div>
+            
             </div>
           </div>
         </div>

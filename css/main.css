@@ -22,70 +22,11 @@ body {
     gap: 0;
     padding: 0;
   }
-  /* Header */
-  header {
-    background: #35434e;
-    color: white;
-    min-height: 80px;
-    border-bottom: #e8491d 2px solid;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 1rem;
-    margin-bottom: 0;
-}
-
   
-  header a {
-    color: #ffffff;
-    text-decoration: none;
-    text-transform: uppercase;
-    font-size: 16px;
-  }
-  
-  header ul {
-    display: flex;
-    align-items: center;
-    gap: 40px; 
-    padding: 0;
-    margin: 0;
-    list-style: none;
-  }
-  
-  
-  header #branding {
-    float: left;
-  }
-  
-  .menu-links {
-    
-    text-align: right;
-    display: flex;
-    align-items: right;
-    gap: 20px;
-
-  }
-  
-  .nav-link {   
-    text-decoration: silver;
-    color: #ffffff;
-    transition: color 0.3s ease-in-out;
-    font-size: 14px;
-    margin-right: 50px;
-  }
-
-  .logo img {
-    width: 120px;
-    height: 75px;
-}
-  .nav-link:hover {
-    color: #007bff;
-  }
- 
 
   .col-md-12{
     background: linear-gradient(0deg, rgba(0, 0, 0, 0.781), rgba(92, 92, 92, 0.342)),url(https://media-cldnry.s-nbcnews.com/image/upload/rockcms/2022-03/plant-based-food-mc-220323-02-273c7b.jpg) rgba(0, 0, 0, 0.479);
-    height: 75vh;
+    height: 70vh;
     background-repeat: no-repeat;
     background-size: cover;
     text-align: center;
@@ -109,20 +50,14 @@ body {
     font-size: 30px;
 
   }
-  /* Footer */
-  footer {
-    padding: 20px;
-    margin-top: 20px;
-    color: #ffffff;
-    background-color: #35434e;
-    text-align: center;
-  }
+
   
  /* Featured Meals */
 .featured-meals {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+
   }
   
   .meal-card {
@@ -141,5 +76,14 @@ body {
   }
   
   .meal-card h4 {
-    margin-top: 0;
+     font-size: 1.2rem;
+    margin: 0 0 0.5rem;
+    color: #35434e;
+    text-transform: uppercase;
+  }
+  .meal-card p {
+   font-size: 1.rem;
+   margin: 0 0 0.5rem;
+   color: #0c0c0cce;
+   text-align: justify;
   }

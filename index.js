@@ -7,12 +7,13 @@ const path = require("path");
 const mealsController = require('./controllers/meals');
 const Meal = require('./models/meals'); 
 const PORT = process.env.PORT || 3000;
-
+const morgan = require("morgan");
 
 
 app.set("view engine", "ejs");
 app.use(express.static(__dirname));
 
+app.use(morgan('combined'));
 
 
 

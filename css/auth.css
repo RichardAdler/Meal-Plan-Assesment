@@ -45,6 +45,11 @@ div[name="register"] {
   width: 100%;
   max-width: 400px;
 }
+.login-alert {
+  text-align: center;
+  color: red;
+  margin-top: 10px;
+}
 .page-container {
   display: grid;
   grid-template-rows: auto 1fr auto;

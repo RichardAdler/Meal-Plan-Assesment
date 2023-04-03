@@ -30,12 +30,30 @@ body {
     color: #ffffff;
     text-shadow: 3px 3px #000000a8;
   }
-  .search{
+  .search {
     padding: 2rem;
     margin: 2rem;
-    display: inline-flex;
-    columns: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
+  
+  .or-section {
+    margin: 1rem 0;
+  }
+  
+  .filter-form {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 1rem;
+  }
+  
   ul {
     list-style: none;
     padding: 0;

@@ -24,6 +24,11 @@
                 <button type="submit">Login</button>
             </form>
             <p>Don't have an account? <a href="/register">Register</a></p>
+            <% if (errorMessage && errorMessage.length > 0) { %>
+                <div class="login-alert" role="alert">
+                  <%= errorMessage[0] %>
+                </div>
+              <% } %>
         </div>
     </div>
     <%- include('./partials/footer') %>

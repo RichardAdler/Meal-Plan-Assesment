@@ -1,4 +1,6 @@
+// ------------------------------
 // Import required modules
+// ------------------------------
 require('dotenv').config(); // Loads environment variables from .env file
 const express = require('express');
 const app = express(); // Create an instance of the Express application
@@ -13,13 +15,11 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcryptjs');
 const User = require('./models/User');
+const flash = require('connect-flash');
 
-
-/**
- * Controllers (route handlers).
- */
-
-
+// ------------------------------
+// Middleware configuration
+// ------------------------------
 app.set("view engine", "ejs");
 app.use(express.static(__dirname));
 app.use(morgan('combined'));
@@ -27,22 +27,25 @@ app.use(express.urlencoded({ extended: false }));
 app.use(session({ secret: 'your-session-secret', resave: false, saveUninitialized: false }));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(flash()); // using connect-flash middleware
 
-
-// Configure Mongoose to use some specific options
+// ------------------------------
+// MongoDB configuration
+// ------------------------------
 mongoose.set('strictQuery', false);
-
-// Create a function to connect to MongoDB and handle any errors
 const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(process.env.MONGODB_URI); // Connect to MongoDB
-    console.log(`MongoDB Connected on: ${conn.connection.host}`); // Log connection host
+    const conn = await mongoose.connect(process.env.MONGODB_URI);
+    console.log(`MongoDB Connected on: ${conn.connection.host}`);
   } catch (error) {
-    console.log(error); // Log any errors
-    process.exit(1); // Exit process with a failure code
+    console.log(error);
+    process.exit(1);
   }
 }
-// Configure Passport.js
+
+// ------------------------------
+// Passport.js configuration
+// ------------------------------
 passport.use(new LocalStrategy({ usernameField: 'email' },
   async (email, password, done) => {
     try {
@@ -80,17 +83,23 @@ passport.deserializeUser(async (id, done) => {
 });
 
 
+// ------------------------------
+// Authentication routes
+// ------------------------------
 
+// Login routes
 app.get('/login', (req, res) => {
-  res.render('login', { isLoggedIn: req.isAuthenticated() });
+  const errorMessage = req.flash('error'); // Get the error message from connect-flash
+  res.render('login', { isLoggedIn: req.isAuthenticated(), errorMessage: errorMessage });
 });
+app.post('/login', passport.authenticate('local', { successRedirect: '/', failureRedirect: '/login', failureFlash: 'Invalid email or password.' }));
+
+// Register route
 app.get('/register', (req, res) => {
   res.render('register', { isLoggedIn: req.isAuthenticated() });
 });
 
-app.post('/login', passport.authenticate('local', { successRedirect: '/', failureRedirect: '/login', failureFlash: false }));
-
-
+// Logout route
 app.get('/logout', (req, res) => {
   req.logout(() => {
     res.redirect('/');
@@ -98,7 +107,11 @@ app.get('/logout', (req, res) => {
 });
 
 
-// Define a route for the home page
+// ------------------------------
+// Meal-related routes
+// ------------------------------
+
+// Home page route
 app.get('/', async (req, res) => {
   try {
     const meals = await Meal.aggregate([
@@ -118,7 +131,7 @@ app.get('/', async (req, res) => {
 });
 
 
-// Define a route for retrieving all meals from the database
+// Route for retrieving all meals from the database
 app.get('/meals', async (req, res) => {
   try {
     const meals = await Meal.aggregate([
@@ -135,8 +148,14 @@ app.get('/meals', async (req, res) => {
       { $limit: 10 }
     ]);
 
+    const isLoggedIn = req.isAuthenticated(); // Check if the user is logged in
+
     if (meals) { // If meals are found
-      res.render('meals', { meals: meals }); // Render the meals.ejs view and pass the meals to it
+      res.render('meals', {
+        meals: meals,
+        isLoggedIn: isLoggedIn,
+        user: req.user // Pass the user object if available
+      }); // Render the meals.ejs view and pass the meals, isLoggedIn, and user to it
     } else {
       res.send("Something went wrong."); // Send an error message as the response
     }
@@ -146,16 +165,19 @@ app.get('/meals', async (req, res) => {
   }
 });
 
+// Route for searching meals
 app.get('/search', async (req, res) => {
   const query = req.query.q || '';
   const limit = 10;
+  const isLoggedIn = req.isAuthenticated();
+  const user = req.user;
 
   try {
     const meals = await Meal.find({ name: new RegExp(query, 'i') })
       .limit(limit)
       .exec();
 
-    res.render('meals', { meals });
+    res.render('meals', { meals, isLoggedIn, user });
   } catch (error) {
     console.log(error);
     res.status(500).send('Error occurred while searching meals');

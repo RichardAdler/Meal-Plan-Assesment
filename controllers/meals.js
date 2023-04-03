@@ -1,4 +1,4 @@
-const Meal = require('../models/meals');
+const Meal = require('../models/Meals');
 
 // Get all meals
 const getAllMeals = async (req, res) => {
@@ -11,6 +11,7 @@ const getAllMeals = async (req, res) => {
     }
 };
 
+  
 module.exports = {
     getAllMeals
 };

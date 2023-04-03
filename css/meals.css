@@ -6,19 +6,36 @@ body {
     padding: 0;
   }
   
-  h1 {
-    font-size: 2rem;
-    color: #35434e;
-    text-align: center;
-    padding: 1rem 0;
-  }
-  
   .container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 1rem;
+    width: 100%;
+    width: unset;
+    
+    color: #ffffff;
+   
   }
-  
+  .hero {
+    text-align: center;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.781), rgba(92, 92, 92, 0.342)),url(https://media-cldnry.s-nbcnews.com/image/upload/rockcms/2022-03/plant-based-food-mc-220323-02-273c7b.jpg) rgba(0, 0, 0, 0.479);
+    width: unset;
+    margin-top: -30px;
+    height: 65vh;
+    background-repeat: no-repeat;
+    background-size: cover;
+    
+  }
+  .hero h1{
+    padding: 20vh;
+    text-align: center;
+    font-size: 45px;
+    color: #ffffff;
+    text-shadow: 3px 3px #000000a8;
+  }
+  .search{
+    padding: 2rem;
+    margin: 2rem;
+    display: inline-flex;
+    columns: 2;
+  }
   ul {
     list-style: none;
     padding: 0;

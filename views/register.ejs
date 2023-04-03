@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/auth.css">
+    <title>Register</title>
+</head>
+<body>
+    <div class="page-container">
+        <%- include('./partials/header') %>
+        <div class="content">
+            <div name="register">
+                <h1>Register</h1>
+                <form action="/register" method="post">
+        <div>
+            <label for="first_name">First Name:</label>
+            <input type="text" name="first_name" id="first_name" required>
+        </div>
+        <div>
+            <label for="surname">Last Name:</label>
+            <input type="text" name="surname" id="surname" required>
+        </div>
+        <div>
+            <label for="email">Email:</label>
+            <input type="email" name="email" id="email" required>
+        </div>
+        <div>
+            <label for="password">Password:</label>
+            <input type="password" name="password" id="password" required>
+        </div>
+        <button type="submit">Register</button>
+    </form>
+    <p>Already have an account? <a href="/login">Login</a></p>
+</div>
+</div>
+<%- include('./partials/footer') %>
+</div>
+</body>
+</html>

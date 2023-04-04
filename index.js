@@ -99,12 +99,14 @@ app.get('/register', (req, res) => {
   res.render('register', { isLoggedIn: req.isAuthenticated() });
 });
 
-// Logout route
+// Logout route // Using Referer to stay on the same page as we currently are 
 app.get('/logout', (req, res) => {
   req.logout(() => {
-    res.redirect('/');
+    const returnUrl = req.header('Referer') || '/';
+    res.redirect(returnUrl);
   });
 });
+
 
 
 // ------------------------------
@@ -154,6 +156,7 @@ app.get('/meals', async (req, res) => {
       res.render('meals', {
         meals: meals,
         isLoggedIn: isLoggedIn,
+        isFilterSearch: false,
         user: req.user // Pass the user object if available
       }); // Render the meals.ejs view and pass the meals, isLoggedIn, and user to it
     } else {
@@ -173,16 +176,47 @@ app.get('/search', async (req, res) => {
   const user = req.user;
 
   try {
-    const meals = await Meal.find({ name: new RegExp(query, 'i') })
+    const meals = await Meal.find({ name: new RegExp(query, 'i'),description: { $ne: null } })
       .limit(limit)
       .exec();
 
-    res.render('meals', { meals, isLoggedIn, user });
+    res.render('meals', { meals, isLoggedIn, user, isFilterSearch: false });
   } catch (error) {
     console.log(error);
     res.status(500).send('Error occurred while searching meals');
   }
 });
+
+
+// Route to search by specific filters
+app.get('/filter-search', async (req, res) => {
+  const include = req.query.include ? req.query.include.split(',') : [];
+  const exclude = req.query.exclude ? req.query.exclude.split(',') : [];
+  const limit = 10;
+  try {
+    const meals = await Meal.find({description: { $ne: null }})
+    .limit(limit);
+    const filteredMeals = meals.filter(meal => {
+      const ingredients = meal.ingredients.split(',').map(i => i.trim().toLowerCase());
+
+      const includeExists = include.every(ingredient => ingredients.includes(ingredient.toLowerCase()));
+      const excludeExists = exclude.some(ingredient => ingredients.includes(ingredient.toLowerCase()));
+
+      return includeExists && !excludeExists;
+    });
+
+    res.render('meals', {
+      meals: filteredMeals,
+      isLoggedIn: req.isAuthenticated(),
+      user: req.user,
+      isFilterSearch: true
+    });
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(500);
+  }
+});
+
 
 // Connect to MongoDB and start the server
 connectDB().then(() => {

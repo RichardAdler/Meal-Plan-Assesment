@@ -3,6 +3,7 @@
 <head>
     <%- include('./partials/header') %>    
     <title>Meals</title>
+    
     <link rel="stylesheet" href="/css/meals.css">
     <link rel="stylesheet" href="/css/headers.css">
 </head>
@@ -36,7 +37,7 @@
               <option value="beef">Beef</option>
               <option value="chicken">Chicken</option>
               <option value="lamb">Lamb</option>
-              <option value="none">Vegeterian</option>
+              <option value="none">None</option>
             </select>
         </div>
         <button type="submit" class="search-button2" <%= !isLoggedIn ? 'disabled' : '' %>>Filter</button>
@@ -60,32 +61,10 @@
                         <p class="description"> <br><%= meal.description %><br></p>
                         <button data-index="<%- index %>" class="toggle-ingredients-btn">Ingredients</button>
                         <button data-index="<%- index %>" class="toggle-steps-btn">Steps</button>
-                        <div class="ingredients" id="ingredients-<%= index %>" style="display: none;">
-                            <p>Ingredients</p>
-                            <ul>
-                              <% meal.ingredients.split(',').slice(1, -1).forEach(ingredient => { %>
-                                <li>- <%= ingredient.trim().slice(1, -1) %></li>
-                              <% }); %>
-                            </ul>
-                        </div>
-                        <div class="steps" id="steps-<%= index %>" style="display: none;">
-                            <p>Preparation</p>
-                            <ol>
-                                <% meal.steps.split(',').slice(1, -1).forEach(steps => {  %>
-                                <li> <%= steps.trim().slice(1, -1) %></li>
-                              <% }); %>
-                            </ol>
-                        </div>
-                    </li>
-                <% }); %>                
-            <% } else { %>
-                <!-- display name search results -->
-                <% meals.forEach((meal, index) => { %>
-                    <li>
-                        <h2><%= meal.name %></h2>
-                        <p class="Description"> <br><%= meal.description %><br></p>
-                        <button data-index="<%- index %>" class="toggle-ingredients-btn">Ingredients</button>
-                        <button data-index="<%- index %>" class="toggle-steps-btn">Steps</button>
+                        <% if (isLoggedIn) { %>
+                            <button data-index="<%- index %>" class="update-button">Update</button>
+                            <button data-index="<%- index %>" class="delete-button">Delete</button>
+                        <% } %>
                         <div class="ingredients" id="ingredients-<%= index %>" style="display: none;">
                             <p>Ingredients</p>
                             <ul>
@@ -104,10 +83,72 @@
                         </div>
                     </li>
                 <% }); %>
-            <% } %>
+                              
+            <% } else { %>
+                <!-- display name search results -->
+                <% meals.forEach((meal, index) => { %>
+                    <li>
+                        <div class="container-with-buttons">
+                            <div class="meal-container">
+                                <div class="meal-details">
+                                    <h2><%= meal.name %></h2>
+                                    <p class="description"> <br><%= meal.description %><br></p>
+                                    <button data-index="<%- index %>" class="toggle-ingredients-btn">Ingredients</button>
+                                    <button data-index="<%- index %>" class="toggle-steps-btn">Steps</button>
+                                    <div class="ingredients" id="ingredients-<%= index %>" style="display: none;">
+                                        <p>Ingredients</p>
+                                        <ul>
+                                          <% meal.ingredients.split(',').slice(1, -1).forEach(ingredient => { %>
+                                            <li>- <%= ingredient.trim().slice(1, -1) %></li>
+                                          <% }); %>
+                                        </ul>
+                                    </div>
+                                    <div class="steps" id="steps-<%= index %>" style="display: none;">
+                                        <p>Preparation</p>
+                                        <ol>
+                                            <% meal.steps.split(',').slice(1, -1).forEach(steps => {  %>
+                                            <li> <%= steps.trim().slice(1, -1) %></li>
+                                          <% }); %>
+                                        </ol>
+                                    </div>
+                                </div>
+                            </div>
+                            <% if (isLoggedIn) { %>
+                                <div class="buttons-container">
+                                    <button data-index="<%- index %>" class="update-button">Update</button>
+                                    <button data-index="<%- index %>" class="delete-button">Delete</button>
+                                </div>
+                            <% } %>
+                        </div>
+                    </li>
+                <% }); %>
+                <% } %>
+                
+                
+            <input type="hidden" id="pageCount" value="<%= pageCount %>">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                    
+                    <% let currentPage = parseInt(page, 10); %>
+                    <% for (let i = startPage; i <= endPage; i++) { %>
+                        <% if (i == currentPage) { %>
+                            <li class="page-item active">
+                                <a class="page-link" href="?page=<%= i %><%= isFilterSearch ? '&include=' + include.join(',') + '&exclude=' + exclude.join(',') : '&q=' + encodeURIComponent(query) %>&limit=10"><%= i %></a>
+                            </li>
+                        <% } else { %>
+                            <li class="page-item">
+                                <a class="page-link" href="?page=<%= i %><%= isFilterSearch ? '&include=' + include.join(',') + '&exclude=' + exclude.join(',') : '&q=' + encodeURIComponent(query) %>&limit=10"><%= i %></a>
+                            </li>
+                        <% } %>
+                    <% } %>
+                    
+                 
+                </ul>
+              </nav>  
         </ul>
-    
+        
     </div>
+    
     <%- include('./partials/footer') %>
 
   

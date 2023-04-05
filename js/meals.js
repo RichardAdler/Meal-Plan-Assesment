@@ -23,4 +23,3 @@ document.querySelectorAll('.toggle-ingredients-btn').forEach((btn, index) => {
       stepsElement.style.display = stepsElement.style.display === 'block' ? 'none' : 'block';
     });
   });
-  

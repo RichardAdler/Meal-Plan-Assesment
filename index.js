@@ -17,6 +17,8 @@ const bcrypt = require('bcryptjs');
 const User = require('./models/User');
 const flash = require('connect-flash');
 
+
+
 // ------------------------------
 // Middleware configuration
 // ------------------------------
@@ -107,8 +109,18 @@ app.get('/logout', (req, res) => {
   });
 });
 
-
-
+// Contact route
+app.get('/contact', (req, res) => {
+  res.render('contact');
+});
+// About route
+app.get('/about', (req, res) => {
+  res.render('about');
+});
+// Review route
+app.get('/reviews', (req, res) => {
+  res.render('reviews');
+});
 // ------------------------------
 // Meal-related routes
 // ------------------------------
@@ -136,6 +148,11 @@ app.get('/', async (req, res) => {
 // Route for retrieving all meals from the database
 app.get('/meals', async (req, res) => {
   try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = 10;
+    const skip = (page - 1) * limit;
+    const pageWindow = 2;
+    console.log("Retrieving all meals...");
     const meals = await Meal.aggregate([
       {
         $match: {
@@ -147,40 +164,77 @@ app.get('/meals', async (req, res) => {
           }
         }
       },
+      { $skip: skip },
       { $limit: 10 }
     ]);
-
+    console.log("Meals retrieved:", meals);
     const isLoggedIn = req.isAuthenticated(); // Check if the user is logged in
+
+    const mealCount = await Meal.countDocuments();
+    const pageCount = Math.ceil(mealCount / 10);
+    const startPage = Math.max(page - pageWindow, 1);
+    const endPage = Math.min(page + pageWindow, pageCount);
+    
 
     if (meals) { // If meals are found
       res.render('meals', {
         meals: meals,
         isLoggedIn: isLoggedIn,
         isFilterSearch: false,
-        user: req.user // Pass the user object if available
+        user: req.user, // Pass the user object if available
+        pageCount: pageCount,
+        currentPage: 1,
+        startPage: startPage,
+        endPage: endPage,
+        query: '', // Pass an empty string for the query variable
+        page: req.query.page || 1
       }); // Render the meals.ejs view and pass the meals, isLoggedIn, and user to it
     } else {
       res.send("Something went wrong."); // Send an error message as the response
     }
   } catch (error) {
-    console.log(error); // Log any errors
-    res.status(500).send("Something went wrong.");
+    console.log('Error in retrieving all meals route:', error);
+    res.status(500).send("Something went wrong in retrieving all meals route.");
   }
 });
+
+
+
 
 // Route for searching meals
 app.get('/search', async (req, res) => {
   const query = req.query.q || '';
+  const page = parseInt(req.query.page) || 1;
   const limit = 10;
+  const skip = (page - 1) * limit;
   const isLoggedIn = req.isAuthenticated();
   const user = req.user;
-
+  
   try {
     const meals = await Meal.find({ name: new RegExp(query, 'i'),description: { $ne: null } })
+      .skip(skip)
       .limit(limit)
       .exec();
 
-    res.render('meals', { meals, isLoggedIn, user, isFilterSearch: false });
+    const mealCount = await Meal.countDocuments({ name: new RegExp(query, 'i') });
+    const pageCount = Math.ceil(mealCount / limit);
+
+    const pageWindow = 2;
+    const startPage = Math.max(page - pageWindow, 1);
+    const endPage = Math.min(page + pageWindow, pageCount);
+
+    res.render('meals', {
+      meals,
+      isLoggedIn,
+      user,
+      isFilterSearch: false,
+      pageCount: pageCount,
+      currentPage: page,
+      query,
+      startPage,
+      endPage,
+      page: req.query.page || 1,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).send('Error occurred while searching meals');
@@ -188,28 +242,37 @@ app.get('/search', async (req, res) => {
 });
 
 
+
 // Route to search by specific filters
 app.get('/filter-search', async (req, res) => {
-  const include = req.query.include ? req.query.include.split(',') : [];
+  const include = req.query.ingredient ? req.query.ingredient.split(',') : [];
   const exclude = req.query.exclude ? req.query.exclude.split(',') : [];
+  const page = parseInt(req.query.page) || 1;
   const limit = 10;
+  const skip = (page - 1) * limit;
   try {
-    const meals = await Meal.find({description: { $ne: null }})
-    .limit(limit);
+    const meals = await Meal.find({description: { $ne: null },description: { $ne: null }})
+    .limit(limit)
+    .skip(skip);
     const filteredMeals = meals.filter(meal => {
-      const ingredients = meal.ingredients.split(',').map(i => i.trim().toLowerCase());
-
-      const includeExists = include.every(ingredient => ingredients.includes(ingredient.toLowerCase()));
-      const excludeExists = exclude.some(ingredient => ingredients.includes(ingredient.toLowerCase()));
-
-      return includeExists && !excludeExists;
+    const ingredients = meal.ingredients.split(',').map(i => i.trim().toLowerCase());
+    const includeExists = include.every(ingredient => ingredients.includes(ingredient.toLowerCase()));
+    const excludeExists = exclude.some(ingredient => ingredients.includes(ingredient.toLowerCase()));
+    return includeExists && !excludeExists;
     });
 
+    const pageCount = Math.ceil(filteredMeals.length / limit);
+
     res.render('meals', {
-      meals: filteredMeals,
+      meals: filteredMeals.slice(skip, skip + limit),
       isLoggedIn: req.isAuthenticated(),
       user: req.user,
-      isFilterSearch: true
+      isFilterSearch: true,
+      pageCount: pageCount,
+      currentPage: page,
+      include: include,
+      exclude: exclude,
+      page: req.query.page || 1
     });
   } catch (error) {
     console.error(error);

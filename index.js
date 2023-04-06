@@ -243,6 +243,18 @@ app.get('/search', async (req, res) => {
   }
 });
 
+app.delete('/delete-meal/:id', async (req, res) => {
+  const mealId = req.params.id;
+
+  try {
+    await Meal.deleteOne({ _id: mealId });
+    res.status(200).send('Meal deleted successfully');
+  } catch (error) {
+    console.error('Error deleting meal:', error);
+    res.status(500).send('Error deleting meal');
+  }
+});
+
 
 
 // Route to search by specific filters
@@ -294,6 +306,7 @@ app.get('/update-meal/:id', async (req, res) => {
     res.sendStatus(500);
   }
 });
+
 
 //Sending the updated meal into the database
 app.post("/update-meal/:id", async (req, res) => {

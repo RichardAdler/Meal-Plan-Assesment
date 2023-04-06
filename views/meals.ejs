@@ -119,8 +119,9 @@
                             </div>
                             <% if (isLoggedIn) { %>
                                 <div class="buttons-container">
-                                    <button data-index="<%- index %>" class="update-button" onclick="location.href='/update-meal/<%= meal._id %>?returnUrl=' + encodeURIComponent(window.location.href)">Update</button>
-                                    <button data-index="<%- index %>" class="delete-button">Delete</button>
+                                    <button data-index="<%- index %>" class="update-button" onclick="location.href='/update-meal/<%= meal._id %>?returnUrl=' + encodeURIComponent(window.location.href)">Edit</button>
+                                    <button data-index="<%- index %>" class="delete-button" data-meal-id="<%= meal._id %>">Delete</button>
+
                                 </div>
                             <% } %>
                         </div>
@@ -153,7 +154,13 @@
         </ul>
         
     </div>
-    
+    <div class="modal" id="delete-modal">
+  <div class="modal-content">
+    <p>Are you sure you want to delete the recipe?</p>
+    <button id="delete-confirm">Yes</button>
+    <button id="delete-cancel">No</button>
+  </div>
+</div>
     <%- include('./partials/footer') %>
 
   

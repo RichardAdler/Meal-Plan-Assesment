@@ -1,15 +1,14 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <%- include('./partials/header') %>
-  <link rel="stylesheet" href="/css/update-mail.css">
+  <link rel="stylesheet" href="/css/update-meal.css">
 
   <title>Update Meal</title>
 </head>
 <body>
-    <h1>Update Meal: <%= meal.name %></h1>
+    <div class="container">
+        <h1><%= meal.name %></h1>
 
     <form action="/update-meal/<%= meal._id %>?returnUrl=<%= encodeURIComponent(returnUrl) %>" method="POST" id="update-meal-form">
 
@@ -41,10 +40,13 @@
             <% }); %>
         </ol>
         <button type="button" id="add-step">Add Step</button>
-
-        <button type="submit">Update</button>
+        <div class="buttons-container">
+            <button type="submit" onclick="showUpdateMessage()">Update</button>
+        <button onclick="goBackWithReturnUrl()" class="go-back">Go Back</button>
+    </div>
+    <div id="update-message" name="update-message" class="hidden">Your recipe has updated!</div>
     </form>
-
+</div>
     <script>
         const returnUrl = '<%= returnUrl %>';
         const mealId = '<%= meal._id %>';
@@ -103,12 +105,22 @@
         
             const data = await response.json();
             if (response.ok) {
-                window.location = data.url;
+                document.getElementById('update-message').classList.remove('hidden');
+                    setTimeout(() => {
+                    window.location = data.url;
+                    }, 3000);
             } else {
                 console.error('Error updating meal:', data);
             }
         });
-        
+        function showUpdateMessage() {
+            const updateMessage = document.getElementById('update-message');
+            updateMessage.classList.remove('hidden');
+        }
+        function goBackWithReturnUrl() {
+            const returnUrl = '<%= returnUrl %>';
+            window.location.href = returnUrl || '/meals'; // Replace '/meals' with the actual URL of the page where you want to fetch the updated data as a fallback
+        }
         updateRemoveIngredientListeners();
         updateRemoveStepListeners();
         

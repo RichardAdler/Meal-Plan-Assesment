@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <%- include('./partials/header') %>
+  <link rel="stylesheet" href="/css/update-mail.css">
+
+  <title>Update Meal</title>
+</head>
+<body>
+    <h1>Update Meal: <%= meal.name %></h1>
+
+    <form action="/update-meal/<%= meal._id %>?returnUrl=<%= encodeURIComponent(returnUrl) %>" method="POST" id="update-meal-form">
+
+
+
+        <label for="description">Description:</label>
+        <textarea name="description" id="description" cols="30" rows="10"><%= meal.description %></textarea>
+
+        <label for="ingredients">Ingredients:</label>
+        <ul id="ingredients-list">
+            <% meal.ingredients.match(/'(.*?)'/g).map(i => i.slice(1, -1)).forEach((ingredient, index) => { %>
+
+                <li>
+                    <input type="text" name="ingredients[]" value="<%= ingredient %>" >
+                    <button type="button" class="remove-ingredient">Remove</button>
+                </li>
+            <% }); %>
+        </ul>
+        <button type="button" id="add-ingredient">Add Ingredient</button>
+
+        <label for="steps">Steps:</label>
+        <ol id="steps-list">
+            <% meal.steps.match(/'(.*?)'/g).map(i => i.slice(1, -1)).forEach((step, index) => { %>
+
+                <li>
+                    <input type="text" name="steps[]" value="<%= step %>" >
+                    <button type="button" class="remove-step">Remove</button>
+                </li>
+            <% }); %>
+        </ol>
+        <button type="button" id="add-step">Add Step</button>
+
+        <button type="submit">Update</button>
+    </form>
+
+    <script>
+        const returnUrl = '<%= returnUrl %>';
+        const mealId = '<%= meal._id %>';
+        document.getElementById('add-ingredient').addEventListener('click', () => {
+            const li = document.createElement('li');
+            li.innerHTML = '<input type="text" name="ingredients[]"><button type="button" class="remove-ingredient">Remove</button>';
+            document.getElementById('ingredients-list').appendChild(li);
+            updateRemoveIngredientListeners();
+        });
+        
+        document.getElementById('add-step').addEventListener('click', () => {
+            const li = document.createElement('li');
+            li.innerHTML = '<input type="text" name="steps[]"><button type="button" class="remove-step">Remove</button>';
+            document.getElementById('steps-list').appendChild(li);
+            updateRemoveStepListeners();
+        });
+        
+        function updateRemoveIngredientListeners() {
+            const removeIngredientButtons = document.querySelectorAll('.remove-ingredient');
+            removeIngredientButtons.forEach(button => {
+                button.addEventListener('click', (e) => {
+                    e.target.parentElement.remove();
+                });
+            });
+        }
+        
+        function updateRemoveStepListeners() {
+            const removeStepButtons = document.querySelectorAll('.remove-step');
+            removeStepButtons.forEach(button => {
+                button.addEventListener('click', (e) => {
+                    e.target.parentElement.remove();
+                });
+            });
+        }
+        
+        document.getElementById('update-meal-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+        
+            const ingredientsArray = Array.from(document.getElementsByName('ingredients[]')).map(input => input.value.replace(/'/g, "\\'"));
+            const stepsArray = Array.from(document.getElementsByName('steps[]')).map(input => input.value.replace(/'/g, "\\'"));
+        
+            const ingredients = '[' + ingredientsArray.map(i => `'${i}'`).join(', ') + ']';
+            const steps = '[' + stepsArray.map(i => `'${i}'`).join(', ') + ']';
+        
+            const formData = new FormData(e.target);
+            formData.set('ingredients', ingredients);
+            formData.set('steps', steps);
+        
+            const response = await fetch(`/update-meal/${mealId}?returnUrl=${encodeURIComponent(returnUrl)}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(Object.fromEntries(formData)),
+            });
+        
+            const data = await response.json();
+            if (response.ok) {
+                window.location = data.url;
+            } else {
+                console.error('Error updating meal:', data);
+            }
+        });
+        
+        updateRemoveIngredientListeners();
+        updateRemoveStepListeners();
+        
+    </script>
+</body>
+</html>

@@ -91,6 +91,7 @@ body {
     box-shadow: none;
     padding: 2px;
     margin: 2px;
+    text-align: left;
   }
   .ingredients li{
     color: #242424;
@@ -98,6 +99,7 @@ body {
     box-shadow: none;
     padding: 2px;
     margin: 2px;
+    text-align: left;
   }
   li {
     background-color: #ffffff;
@@ -438,7 +440,7 @@ body {
   align-items: center;
   background-color: #168affc0;
   border: 0;
-  border-radius: 100px;
+  border-radius: 10px;
   box-sizing: border-box;
   color: #ffffff;
   cursor: pointer;
@@ -484,7 +486,7 @@ body {
   align-items: center;
   background-color: #ee2525b2;
   border: 0;
-  border-radius: 100px;
+  border-radius: 10px;
   box-sizing: border-box;
   color: #ffffff;
   cursor: pointer;

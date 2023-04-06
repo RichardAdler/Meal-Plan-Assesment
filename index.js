@@ -25,11 +25,13 @@ const flash = require('connect-flash');
 app.set("view engine", "ejs");
 app.use(express.static(__dirname));
 app.use(morgan('combined'));
+app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(session({ secret: 'your-session-secret', resave: false, saveUninitialized: false }));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash()); // using connect-flash middleware
+
 
 // ------------------------------
 // MongoDB configuration
@@ -279,6 +281,49 @@ app.get('/filter-search', async (req, res) => {
     res.sendStatus(500);
   }
 });
+//Update meal route
+app.get('/update-meal/:id', async (req, res) => {
+  const mealId = req.params.id;
+  const returnUrl = req.query.returnUrl;
+
+  try {
+    const meal = await Meal.findById(mealId);
+    res.render('update-meal', { meal, returnUrl, isLoggedIn: req.isAuthenticated(), user: req.user });
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(500);
+  }
+});
+
+//Sending the updated meal into the database
+app.post("/update-meal/:id", async (req, res) => {
+
+
+  try {
+    const mealId = req.params.id;
+    const meal = await Meal.findById(mealId);
+    const ingredientsArray = req.body.ingredients;
+    const stepsArray = req.body.steps;
+    console.log(stepsArray);
+   // const ingredients = JSON.stringify(ingredientsArray);
+   // const steps = JSON.stringify(stepsArray);
+    console.log("Atfter Stringify: "+stepsArray);
+
+    meal.description = req.body.description;
+    meal.ingredients = ingredientsArray;
+    meal.steps = stepsArray;
+    
+    console.log(meal.steps);
+    await meal.save();
+
+    res.redirect(decodeURIComponent(req.query.returnUrl));
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error updating meal');
+  }
+});
+
+
 
 
 // Connect to MongoDB and start the server

@@ -23,7 +23,7 @@
 
                 <li>
                     <input type="text" name="ingredients[]" value="<%= ingredient %>" >
-                    <button type="button" class="remove-ingredient">Remove</button>
+                    <button type="button" class="remove-ingredient">-</button>
                 </li>
             <% }); %>
         </ul>
@@ -35,7 +35,7 @@
 
                 <li>
                     <input type="text" name="steps[]" value="<%= step %>" >
-                    <button type="button" class="remove-step">Remove</button>
+                    <button type="button" class="remove-step">-</button>
                 </li>
             <% }); %>
         </ol>
@@ -52,14 +52,14 @@
         const mealId = '<%= meal._id %>';
         document.getElementById('add-ingredient').addEventListener('click', () => {
             const li = document.createElement('li');
-            li.innerHTML = '<input type="text" name="ingredients[]"><button type="button" class="remove-ingredient">Remove</button>';
+            li.innerHTML = '<input type="text" name="ingredients[]"><button type="button" class="remove-ingredient">-</button>';
             document.getElementById('ingredients-list').appendChild(li);
             updateRemoveIngredientListeners();
         });
         
         document.getElementById('add-step').addEventListener('click', () => {
             const li = document.createElement('li');
-            li.innerHTML = '<input type="text" name="steps[]"><button type="button" class="remove-step">Remove</button>';
+            li.innerHTML = '<input type="text" name="steps[]"><button type="button" class="remove-step">-</button>';
             document.getElementById('steps-list').appendChild(li);
             updateRemoveStepListeners();
         });

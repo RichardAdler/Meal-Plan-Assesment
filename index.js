@@ -6,7 +6,6 @@ const express = require('express');
 const app = express(); // Create an instance of the Express application
 const mongoose = require('mongoose');
 const path = require('path');
-const mealsController = require('./controllers/meals');
 const Meal = require('./models/Meals');
 const PORT = process.env.PORT || 3000;
 const morgan = require('morgan');
@@ -16,7 +15,6 @@ const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcryptjs');
 const User = require('./models/User');
 const flash = require('connect-flash');
-
 
 
 // ------------------------------
@@ -244,43 +242,6 @@ app.get('/search', async (req, res) => {
 });
 
 
-
-// Route to search by specific filters
-app.get('/filter-search', async (req, res) => {
-  const include = req.query.ingredient ? req.query.ingredient.split(',') : [];
-  const exclude = req.query.exclude ? req.query.exclude.split(',') : [];
-  const page = parseInt(req.query.page) || 1;
-  const limit = 10;
-  const skip = (page - 1) * limit;
-  try {
-    const meals = await Meal.find({description: { $ne: null },description: { $ne: null }})
-    .limit(limit)
-    .skip(skip);
-    const filteredMeals = meals.filter(meal => {
-    const ingredients = meal.ingredients.split(',').map(i => i.trim().toLowerCase());
-    const includeExists = include.every(ingredient => ingredients.includes(ingredient.toLowerCase()));
-    const excludeExists = exclude.some(ingredient => ingredients.includes(ingredient.toLowerCase()));
-    return includeExists && !excludeExists;
-    });
-
-    const pageCount = Math.ceil(filteredMeals.length / limit);
-
-    res.render('meals', {
-      meals: filteredMeals.slice(skip, skip + limit),
-      isLoggedIn: req.isAuthenticated(),
-      user: req.user,
-      isFilterSearch: true,
-      pageCount: pageCount,
-      currentPage: page,
-      include: include,
-      exclude: exclude,
-      page: req.query.page || 1
-    });
-  } catch (error) {
-    console.error(error);
-    res.sendStatus(500);
-  }
-});
 //Deleting Meal
 app.delete('/delete-meal/:id', async (req, res) => {
   const mealId = req.params.id;
@@ -307,6 +268,7 @@ app.get('/update-meal/:id', async (req, res) => {
     res.sendStatus(500);
   }
 });
+
 
 //Sending the updated meal into the database
 app.post("/update-meal/:id", async (req, res) => {
@@ -335,6 +297,37 @@ app.post("/update-meal/:id", async (req, res) => {
     res.status(500).send('Error updating meal');
   }
 });
+
+//Route to the create meal page if the user logged in
+app.get('/create-meal', (req, res) => {
+  if (req.isAuthenticated()) {
+    res.render('create-meal', { isLoggedIn: true, user: req.user });
+  } else {
+    res.redirect('/login');
+  }
+});
+
+//Posting the new meal
+app.post('/create-meal', async (req, res) => {
+  try {
+    const { name, id, steps, description, ingredients } = req.body;
+    const newMeal = new Meal({
+      name,
+      id,
+      steps,
+      description,
+      ingredients,
+    });
+
+    await newMeal.save();
+    res.redirect('/meals');
+  } catch (error) {
+    console.error('Error creating a new meal:', error);
+    res.status(500).send('Error creating a new meal');
+  }
+});
+
+
 
 
 

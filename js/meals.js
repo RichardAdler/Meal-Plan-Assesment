@@ -61,5 +61,14 @@ document.querySelectorAll('.toggle-ingredients-btn').forEach((btn, index) => {
       console.error('Error deleting meal:', error);
     }
   }
+  document.addEventListener('DOMContentLoaded', () => {
+    const createMealButton = document.getElementById('create-meal-button');
+  
+    if (createMealButton) {
+      createMealButton.addEventListener('click', () => {
+        window.location.href = '/create-meal';
+      });
+    }
+  });
   
   

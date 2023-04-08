@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/update-meal.css">
+    <title>Create New Meal</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Create New Meal</h1>
+        <form id="create-meal-form" action="/create-meal" method="post">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+                        
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" required></textarea>
+            
+            <label for="ingredients">Ingredients:</label>
+            <ul id="ingredients-list">
+            </ul>
+            <button type="button" id="add-ingredient">Add Ingredient</button>
+            
+            <label for="steps">Steps:</label>
+            <ol id="steps-list">
+            </ol>
+            <button type="button" id="add-step">Add Step</button>
+            
+            <div class="buttons-container">
+                <button type="submit">Submit</button>
+                <button type="button" onclick="window.history.back()" class="go-back">Go Back</button>
+            </div>
+        </form>
+    </div>
+    <script>
+        document.getElementById('create-meal-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+          
+            const ingredientsArray = Array.from(document.getElementsByName('ingredients[]')).map(input => input.value.replace(/'/g, "\\'"));
+            const stepsArray = Array.from(document.getElementsByName('steps[]')).map(input => input.value.replace(/'/g, "\\'"));
+          
+            const ingredients = '[' + ingredientsArray.map(i => `'${i}'`).join(', ') + ']';
+            const steps = '[' + stepsArray.map(i => `'${i}'`).join(', ') + ']';
+          
+            const formData = new FormData(e.target);
+            formData.set('ingredients', ingredients);
+            formData.set('steps', steps);
+          
+            const response = await fetch('/create-meal', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(Object.fromEntries(formData)),
+            });
+          
+            if (response.ok) {
+              window.location = '/meals';
+            } else {
+              console.error('Error creating meal:', await response.text());
+            }
+          });
+          
+        document.getElementById('add-ingredient').addEventListener('click', () => {
+            const li = document.createElement('li');
+            li.innerHTML = '<input type="text" name="ingredients[]"><button type="button" class="remove-ingredient">-</button>';
+            document.getElementById('ingredients-list').appendChild(li);
+            updateRemoveIngredientListeners();
+        });
+        
+        document.getElementById('add-step').addEventListener('click', () => {
+            const li = document.createElement('li');
+            li.innerHTML = '<input type="text" name="steps[]"><button type="button" class="remove-step">-</button>';
+            document.getElementById('steps-list').appendChild(li);
+            updateRemoveStepListeners();
+        });
+        
+        function updateRemoveIngredientListeners() {
+            const removeIngredientButtons = document.querySelectorAll('.remove-ingredient');
+            removeIngredientButtons.forEach(button => {
+                button.addEventListener('click', (e) => {
+                    e.target.parentElement.remove();
+                });
+            });
+        }
+        
+        function updateRemoveStepListeners() {
+            const removeStepButtons = document.querySelectorAll('.remove-step');
+            removeStepButtons.forEach(button => {
+                button.addEventListener('click', (e) => {
+                    e.target.parentElement.remove();
+                });
+            });
+        }
+        
+        updateRemoveIngredientListeners();
+        updateRemoveStepListeners();
+    </script>
+</body>
+</html>

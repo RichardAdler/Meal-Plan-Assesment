@@ -16,6 +16,9 @@ const bcrypt = require('bcryptjs');
 const User = require('./models/User');
 const flash = require('connect-flash');
 const Review = require('./models/Reviews');
+const Contact = require('./models/Contact');
+
+
 
 
 // ------------------------------
@@ -387,11 +390,20 @@ app.get('/reviews', async (req, res) => {
   }
 });
 
+//Contact configuration
+app.use(express.urlencoded({ extended: false }));
+app.post('/submit-contact', async (req, res) => {
+  const { name, email, message } = req.body;
 
-
-
-
-
+  try {
+    const contact = new Contact({ name, email, message });
+    await contact.save();
+    res.redirect('/');
+  } catch (error) {
+    console.log(error);
+    res.status(500).send('Something went wrong.');
+  }
+});
 
 
 

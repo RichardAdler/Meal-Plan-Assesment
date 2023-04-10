@@ -1,0 +1,13 @@
+const submitContact = async (req, res) => {
+    const { name, email, message } = req.body;
+  
+    try {
+      const contact = new Contact({ name, email, message });
+      await contact.save();
+      res.redirect('/');
+    } catch (error) {
+      console.log(error);
+      res.status(500).send('Something went wrong.');
+    }
+  };
+  

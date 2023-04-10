@@ -25,6 +25,7 @@
     "morgan": "^1.10.0",
     "node": "^19.8.1",
     "node3": "^1.0.0",
+    "nodemailer": "^6.9.1",
     "openai": "^3.2.1",
     "passport": "^0.6.0",
     "passport-local": "^1.0.0",

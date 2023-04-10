@@ -9,26 +9,31 @@
   <title>Reviews</title>
 </head>
 <body>
-  <h1>Reviews</h1>
+  <div class="hero">
+    <h1>Reviews</h1>
+</div>
   <div class="container box">
   <ul>
     <% reviews.forEach(review => { %>
         <li>
-          <h2><%= review.meal %></h2>
-          <% if (review.user) { %>
-            <p>User: <%= review.user %></p>
-          <% } else { %>
-            <p>User: Unknown</p>
-          <% } %>
+          <h2><%= review.meal %></h2>       
           <div class="star-rating">
             <% for (let i = 1; i <= 5; i++) { %>
               <span class="<%= i <= review.rating ? 'star' : 'gray-star' %>">&#9733;</span>
             <% } %>
-            <span class="Rating-numbers"><%= review.rating %>/5</span>
-          </div>                                   
+            <span class="Rating-numbers"> &nbsp <%= review.rating %>/5</span>
+          </div> 
+          <div class="user">
+          <% if (review.user) { %>
+            <p>Rated by: <%= review.user %></p>
+          <% } else { %>
+            <p>User: Unknown</p>
+          <% } %>   
+        </div>                               
         </li>
       <% }) %>
   </ul>
   </div>
+  <%- include('./partials/footer') %>
 </body>
 </html>

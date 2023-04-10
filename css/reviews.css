@@ -4,6 +4,7 @@ body {
     color: #333;
     margin: 0;
     padding: 0;
+    text-align: center;
   }
   
   .container {
@@ -11,6 +12,7 @@ body {
     width: unset;
     
     color: #ffffff;
+    
    
   }
   .hero {
@@ -21,6 +23,7 @@ body {
     height: 65vh;
     background-repeat: no-repeat;
     background-size: cover;
+    margin-bottom: 30px;
     
   }
   .hero h1{
@@ -30,72 +33,13 @@ body {
     color: #ffffff;
     text-shadow: 3px 3px #000000a8;
   }
-  .search {
-    padding: 2rem;
-    margin: 2rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  .create-meal{
-    display: inline-flex;
-    flex-direction: column;
-    align-items: left;
-    margin: 0 2rem;
-    color: #ff0000;
-    font-weight: 600;
-    padding-top: 1.5rem;
-  }
-  
-  .or-section {
-    margin: 2rem 0;
-    font-weight: 700;
-  }
-  
 
-  
-  .form-group {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 0 1rem;
-  }
-  
   ul {
     list-style: none;
     padding: 0;
     margin: 0;
   }
-  .ingredients p{
-    text-align: center;
-    color: #1d006b;
-    text-transform: capitalize;
-    font-size: x-large;
-    font-weight: 700;
-  }
-  .steps p{
-    text-align: center;
-    color: #1d006b;
-    text-transform: capitalize;
-    font-size: x-large;
-    font-weight: 700;
-  }
-  .steps li{
-    color: #242424;
-    border: none;
-    box-shadow: none;
-    padding: 2px;
-    margin: 2px;
-    text-align: left;
-  }
-  .ingredients li{
-    color: #242424;
-    border: none;
-    box-shadow: none;
-    padding: 2px;
-    margin: 2px;
-    text-align: left;
-  }
+
   li {
     background-color: #ffffff;
     border: 1px solid #dee2e6;
@@ -111,6 +55,7 @@ body {
     color: #35434e;
     text-transform: capitalize;
     text-align: center;
+    margin-bottom: 20px;
   }
 
   p {
@@ -138,7 +83,7 @@ body {
   }
   .star-rating {
     display: inline-flex;
-    font-size: 1.5rem;
+    font-size: 1.8rem;
     color: #ffc107;
   }
   
@@ -150,10 +95,18 @@ body {
     font-family: 'Font Awesome 5 Free';
     font-weight: 900;
     content: "\f005"; /* Unicode value for a solid star */
+    margin-top: -6px;
+    margin-bottom: 15px;
   }
   .gray-star {
     font-family: 'Font Awesome 5 Free';
     font-weight: 900;
     color: #ccc;
     content: "\f005"; /* Unicode value for a solid star */
+    margin-top: -6px;
+    margin-bottom: 15px;
   }
+.user{
+    text-align: center;
+    font-weight: 600;
+}

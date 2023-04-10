@@ -112,11 +112,19 @@ app.get('/logout', (req, res) => {
 
 // Contact route
 app.get('/contact', (req, res) => {
-  res.render('contact');
+  if (req.isAuthenticated()) {
+    res.render("contact", {  user: req.user, isLoggedIn: true });
+  } else {
+    res.render("contact", {  user: null, isLoggedIn: false });
+  }
 });
 // About route
 app.get('/about', (req, res) => {
-  res.render('about');
+  if (req.isAuthenticated()) {
+    res.render("about", {  user: req.user, isLoggedIn: true });
+  } else {
+    res.render("about", {  user: null, isLoggedIn: false });
+  }
 });
 
 // ------------------------------

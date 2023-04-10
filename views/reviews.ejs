@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('./partials/header') %>   
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/reviews.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+  <title>Reviews</title>
+</head>
+<body>
+  <h1>Reviews</h1>
+  <div class="container box">
+  <ul>
+    <% reviews.forEach(review => { %>
+        <li>
+          <h2><%= review.meal %></h2>
+          <% if (review.user) { %>
+            <p>User: <%= review.user %></p>
+          <% } else { %>
+            <p>User: Unknown</p>
+          <% } %>
+          <div class="star-rating">
+            <% for (let i = 1; i <= 5; i++) { %>
+              <span class="<%= i <= review.rating ? 'star' : 'gray-star' %>">&#9733;</span>
+            <% } %>
+            <span class="Rating-numbers"><%= review.rating %>/5</span>
+          </div>                                   
+        </li>
+      <% }) %>
+  </ul>
+  </div>
+</body>
+</html>

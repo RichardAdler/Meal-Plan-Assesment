@@ -15,6 +15,7 @@ const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcryptjs');
 const User = require('./models/User');
 const flash = require('connect-flash');
+const Review = require('./models/Reviews');
 
 
 // ------------------------------
@@ -117,10 +118,7 @@ app.get('/contact', (req, res) => {
 app.get('/about', (req, res) => {
   res.render('about');
 });
-// Review route
-app.get('/reviews', (req, res) => {
-  res.render('reviews');
-});
+
 // ------------------------------
 // Meal-related routes
 // ------------------------------
@@ -326,6 +324,64 @@ app.post('/create-meal', async (req, res) => {
     res.status(500).send('Error creating a new meal');
   }
 });
+
+//Reviews Route
+app.get('/reviews', async (req, res) => {
+  try {
+    const reviews = await Review.aggregate([
+      {
+        $lookup: {
+          from: "meals",
+          localField: "recipe_id",
+          foreignField: "id",
+          as: "meal",
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "user_id",
+          foreignField: "user_id",
+          as: "user",
+        },
+      },
+      {
+        $unwind: "$meal",
+      },
+      {
+        $unwind: {
+          path: "$user",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $match: {
+          "user": { $exists: true }
+        },
+      },
+      {
+        $sample: { size: 10 }
+      },
+      {
+        $project: {
+          meal: "$meal.name",
+          user: "$user.full_name",
+          rating: "$rating",
+        },
+      },
+    ]);
+
+    console.log("reviews:", reviews);
+    res.render('reviews', { reviews: reviews, user: req.user, isLoggedIn: req.isAuthenticated() });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+
+
+
 
 
 

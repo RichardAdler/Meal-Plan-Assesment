@@ -52,12 +52,7 @@ body {
     font-weight: 700;
   }
   
-  .filter-form {
-    font-weight: 600;
-    display: flex;
-    justify-content: center;
-    column-gap: 25px;
-  }
+
   
   .form-group {
     display: flex;

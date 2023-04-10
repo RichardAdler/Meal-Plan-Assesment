@@ -1,0 +1,159 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .container {
+    width: 100%;
+    width: unset;
+    
+    color: #ffffff;
+   
+  }
+  .hero {
+    text-align: center;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.781), rgba(92, 92, 92, 0.342)),url(https://media-cldnry.s-nbcnews.com/image/upload/rockcms/2022-03/plant-based-food-mc-220323-02-273c7b.jpg) rgba(0, 0, 0, 0.479);
+    width: unset;
+    margin-top: -30px;
+    height: 65vh;
+    background-repeat: no-repeat;
+    background-size: cover;
+    
+  }
+  .hero h1{
+    padding: 20vh;
+    text-align: center;
+    font-size: 45px;
+    color: #ffffff;
+    text-shadow: 3px 3px #000000a8;
+  }
+  .search {
+    padding: 2rem;
+    margin: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .create-meal{
+    display: inline-flex;
+    flex-direction: column;
+    align-items: left;
+    margin: 0 2rem;
+    color: #ff0000;
+    font-weight: 600;
+    padding-top: 1.5rem;
+  }
+  
+  .or-section {
+    margin: 2rem 0;
+    font-weight: 700;
+  }
+  
+
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 1rem;
+  }
+  
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .ingredients p{
+    text-align: center;
+    color: #1d006b;
+    text-transform: capitalize;
+    font-size: x-large;
+    font-weight: 700;
+  }
+  .steps p{
+    text-align: center;
+    color: #1d006b;
+    text-transform: capitalize;
+    font-size: x-large;
+    font-weight: 700;
+  }
+  .steps li{
+    color: #242424;
+    border: none;
+    box-shadow: none;
+    padding: 2px;
+    margin: 2px;
+    text-align: left;
+  }
+  .ingredients li{
+    color: #242424;
+    border: none;
+    box-shadow: none;
+    padding: 2px;
+    margin: 2px;
+    text-align: left;
+  }
+  li {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    margin: 1rem;
+  }
+ 
+  h2 {
+    font-size: 1.5rem;
+    margin: 0 0 0.5rem;
+    color: #35434e;
+    text-transform: capitalize;
+    text-align: center;
+  }
+
+  p {
+    margin: 2;
+    padding: 2;
+    color: #555;
+    text-align: justify;
+  }
+  p .description {
+    margin: 2;
+    padding: 2;
+    color: #555;
+    font-style: oblique;
+  }
+  .box {
+    background-color: white;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: #333;
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+    
+  }
+  .star-rating {
+    display: inline-flex;
+    font-size: 1.5rem;
+    color: #ffc107;
+  }
+  
+  .star-rating span {
+    margin-right: 2px;
+  }
+  
+  .star {
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    content: "\f005"; /* Unicode value for a solid star */
+  }
+  .gray-star {
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    color: #ccc;
+    content: "\f005"; /* Unicode value for a solid star */
+  }

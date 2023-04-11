@@ -10,31 +10,48 @@
 
 
     <section class="hero">
-      <div class="main-content">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <h1>Welcome to The Meal Planner!</h1>
-                    <p>Discover delicious recipes and plan your meals for the week.</p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-1233">
-                    <h3>Featured Meals</h3>
-                </div>
-            </div>
-            <div class="featured-meals">
-                <% meals.forEach((meal) => { %>
-                    <div class="meal-card">                    
-                        <h4><%= meal.name %></h4>
-                        <hr>
-                        <p><%= meal.description %></p>
+        <div class="main-content">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h1>Welcome to The Meal Planner!</h1>
+                        <p>Discover delicious recipes and plan your meals for the week. Save time and money by organizing your meals in advance, and never worry about what to cook again!</p>
                     </div>
-                <% }); %>
+                </div>
+                <div class="row1">
+                    <div class="div1">
+                        <h2>Why Use The Meal Planner?</h2>
+                        <ul>
+                            <li>Organize your meals for the week</li>
+                            <li>Discover new, tasty recipes</li>
+                            <li>Save time and money on groceries</li>
+                            <li>Improve your cooking skills</li>
+                            <li>Easily plan for special dietary needs</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row2">
+                    <div class="div2">
+                        <h2>Featured Meals</h3>
+                    </div>
+                </div>
+                <div class="featured-meals">
+                    <% meals.forEach((meal) => { %>
+                        <div class="meal-card">
+                            <h4><%= meal.name %></h4>
+                            <hr>
+                            <p><%= meal.description %></p>
+                            <a href="/search?q=<%= meal.name %>">More info >></a>
+                        </div>
+                    <% }); %>
+                </div>
+                <div class="row3">
+                    <div class="div3">
+                        <h2>Get Started</h3>
+                        <p>Ready to start planning your meals? <a href="/register">Sign up</a> for a free account or <a href="/login">log in</a> to create your personalized meal plann. Create grocery lists, and customize your meal plans for a stress-free cooking experience!</p>
+                    </div>
+                </div>
             </div>
-            
-            </div>
-          </div>
         </div>
     </section>
     <%- include('./partials/footer') %>

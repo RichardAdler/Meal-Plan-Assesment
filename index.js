@@ -105,6 +105,53 @@ app.get('/register', (req, res) => {
   res.render('register', { isLoggedIn: req.isAuthenticated() });
 });
 
+app.post('/register', async (req, res) => {
+  try {
+    console.log('Start registration process');
+    const { email, password, first_name, surname } = req.body;
+
+    console.log('Checking for existing user');
+    const existingUser = await User.findOne({ email });
+
+    if (existingUser) {
+      return res.status(400).send('User with this email already exists.');
+    }
+
+    console.log('Hashing password');
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    console.log('Creating new user');
+    // You need to generate a unique user_id value
+    const user_id = await generateUniqueUserId();
+
+    // Combine first_name and surname to create the full_name
+    const full_name = first_name + ' ' + surname;
+
+    const newUser = new User({ email, password: hashedPassword, first_name, surname, full_name, user_id });
+
+    console.log('Saving new user');
+    await newUser.save();
+
+    console.log('Registration successful, redirecting to login');
+    res.redirect('/login');
+  } catch (error) {
+    console.error('Error during registration:', error);
+    res.status(500).send('Something went wrong while registering the user.');
+  }
+});
+
+// Add a function to generate a unique user_id
+async function generateUniqueUserId() {
+  // Count the number of documents in the User collection
+  const userCount = await User.countDocuments();
+
+  // Return the next available user_id
+  return userCount + 1;
+}
+
+
+
+
 // Logout route // Using Referer to stay on the same page as we currently are 
 app.get('/logout', (req, res) => {
   req.logout(() => {

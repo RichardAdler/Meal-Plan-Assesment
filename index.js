@@ -365,6 +365,7 @@ app.get('/create-meal', (req, res) => {
 
 //Posting the new meal
 app.post('/create-meal', async (req, res) => {
+  console.log('Meal creation started.');
   try {
     const { name, id, steps, description, ingredients } = req.body;
     const newMeal = new Meal({
